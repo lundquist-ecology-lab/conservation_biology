@@ -1,0 +1,11 @@
+services:
+  streamlit:
+    build: .
+    ports:
+      - "8501:8501"  # Maps the host port to the container port
+    volumes:
+      - ./app.py:/app/app.py
+      - ./unit1:/app/unit1
+      - ./unit2:/app/unit2
+      - ./unit3:/app/unit3
+      - ./.streamlit:/app/.streamlit  # Bind mount the Streamlit configuration folder
