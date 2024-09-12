@@ -1,8 +1,9 @@
 import streamlit as st
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
 
 def page0_content():
-    import streamlit as st
-
     # Page Title
     st.title("Understanding the Value of Species through Environmental Economics")
 
@@ -53,25 +54,52 @@ def page0_content():
     if st.button("Reveal Actual Value"):
         st.write("The actual estimated value of pollinators is **$34 billion USD**.")
         st.write("Citation: Alex Jordan, Harland M. Patch, Christina M. Grozinger, and Vikas Khanna (2021),"
-                "Economic dependence and vulnerability of united states agricultural sector on insect-mediated pollination service, "
+                "Economic dependence and vulnerability of the United States agricultural sector on insect-mediated pollination service, "
                 "_Environmental Science & Technology_, 2021, **55** (4), 2243-2253, "
                 "[DOI: 10.1021/acs.est.0c04786](https://doi.org/10.1021/acs.est.0c04786).")
         st.image("https://pubs.acs.org/cms/10.1021/acs.est.0c04786/asset/images/medium/es0c04786_0006.gif")
-    
 
-    st.subheader("Patterns of bee pollinators in United States")
+    st.subheader("Patterns of Bee Pollinators in the United States")
     st.image("https://www.pnas.org/cms/10.1073/pnas.1218503110/asset/3b01900a-1dea-41c4-9539-f783733c1bf9/assets/graphic/pnas.1218503110fig01.jpeg")
     st.write("""
             Citation: Bartomeus, I., Ascher, J. S., Gibbs, J., Danforth, B. N., Wagner, D. L., Hedtke, S. M., & Winfree, R. (2013). 
             Historical changes in northeastern US bee pollinators related to shared ecological traits. 
             _Proceedings of the National Academy of Sciences_, **110** (12), 4656-4660.
             """)
+
+    # Read the CSV file from the URL
+    st.header("Fruit Production Data Analysis")
+    url = "https://raw.githubusercontent.com/lundquist-ecology-lab/conservation_biology/main/data/blueberrystats.csv"
+    df = pd.read_csv(url)
     
+    # Data Cleaning and Processing
+    df_cleaned = df.replace('NA', np.nan)
+    for col in df_cleaned.columns[1:]:
+        df_cleaned[col] = pd.to_numeric(df_cleaned[col], errors='coerce')
+    
+    # Calculate the mean and SE for each year
+    mean_per_year = df_cleaned.iloc[:, 1:].mean(axis=0)
+    se_per_year = df_cleaned.iloc[:, 1:].sem(axis=0)
+    
+    # Prepare data for plotting
+    df_plot = pd.DataFrame({'Year': mean_per_year.index, 'Average (lbs/acre)': mean_per_year.values, 'SE (lbs/acre)': se_per_year.values})
+    df_plot['Year'] = pd.to_numeric(df_plot['Year'], errors='coerce')
+    df_plot = df_plot.sort_values('Year').dropna()
+    
+    # Plotting the data
+    fig, ax = plt.subplots()
+    ax.errorbar(df_plot['Year'], df_plot['Average (lbs/acre)'], yerr=df_plot['SE (lbs/acre)'], fmt='-o', ecolor='red', capsize=5, label='Average Production')
+    ax.set_xlabel('Year')
+    ax.set_ylabel('Production (lbs/acre)')
+    ax.set_title('Average Blueberry Production in the US (1980-2012)')
+    ax.legend()
+    st.pyplot(fig)
+
     # Discussion and Reflection
     st.subheader("Discussion questions")
     st.write("Why do you think species like bees are valuable? What factors influence their value?")
-    st.write("Native pollinators are on the decline, however ")
-    st.wrtie("What patterns do you see in ")
+    st.write("Native pollinators are on the decline, however...")
+    st.write("What patterns do you see in the graph of fruit production in the US?")
 
     # Conclusion
     st.header("Conclusion")
