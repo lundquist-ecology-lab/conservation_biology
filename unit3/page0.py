@@ -70,30 +70,29 @@ def page0_content():
     # Read the CSV file from the URL
     st.header("Fruit Production Data Analysis")
     url = "https://raw.githubusercontent.com/lundquist-ecology-lab/conservation_biology/main/data/blueberrystats.csv"
-    df = pd.read_csv(url)
+    data = pd.read_csv(url, header=None)
     
-    # Data Cleaning and Processing
-    df_cleaned = df.replace('NA', np.nan)
-    for col in df_cleaned.columns[1:]:
-        df_cleaned[col] = pd.to_numeric(df_cleaned[col], errors='coerce')
-    
-    # Calculate the mean and SE for each year
-    mean_per_year = df_cleaned.iloc[:, 1:].mean(axis=0)
-    se_per_year = df_cleaned.iloc[:, 1:].sem(axis=0)
-    
-    # Prepare data for plotting
-    df_plot = pd.DataFrame({'Year': mean_per_year.index, 'Average (lbs/acre)': mean_per_year.values, 'SE (lbs/acre)': se_per_year.values})
-    df_plot['Year'] = pd.to_numeric(df_plot['Year'], errors='coerce')
-    df_plot = df_plot.sort_values('Year').dropna()
+    # Extract the years from the first row
+    years = data.iloc[0].dropna().astype(int)
+
+    # Extract the numerical data, starting from the second row
+    numeric_data = data.iloc[1:]
+
+    # Ensure that the numeric data columns match the length of the years
+    numeric_data = numeric_data.loc[:, :len(years)-1]
+
+    # Calculate the mean and standard error, ignoring missing values
+    means = numeric_data.apply(pd.to_numeric, errors='coerce').mean()
+    se = numeric_data.apply(pd.to_numeric, errors='coerce').sem()
     
     # Plotting the data
-    fig, ax = plt.subplots()
-    ax.errorbar(df_plot['Year'], df_plot['Average (lbs/acre)'], yerr=df_plot['SE (lbs/acre)'], fmt='-o', ecolor='red', capsize=5, label='Average Production')
-    ax.set_xlabel('Year')
-    ax.set_ylabel('Production (lbs/acre)')
-    ax.set_title('Average Blueberry Production in the US (1980-2012)')
-    ax.legend()
-    st.pyplot(fig)
+    plt.figure(figsize=(10, 6))
+    plt.errorbar(years, means, yerr=se, fmt='o-', ecolor='red', capsize=5)
+    plt.xlabel('Year')
+    plt.ylabel('Production (lbs/acre)')
+    plt.title('Average Blueberry Production in the US (1980-2012)')
+    plt.legend()
+    st.pyplot(plt)
 
     # Discussion and Reflection
     st.subheader("Discussion questions")
