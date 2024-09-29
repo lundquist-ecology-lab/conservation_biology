@@ -18,6 +18,10 @@ from unit2.page4 import page4_content as u24
 from unit2.page5 import page5_content as u25
 
 from unit3.page0 import page0_content as u30
+from unit3.page1 import page1_content as u31
+from unit3.page2 import page2_content as u32
+
+from paper_summary.page0 import page0_content as up0
 
 # Set the page configuration for the Streamlit app
 st.set_page_config(page_title="Conservation Biology", layout="wide")
@@ -42,12 +46,14 @@ st.sidebar.title("Navigation")
 main_page = st.sidebar.selectbox("Choose a unit:", ["Home", 
                                                     "Introduction to Conservation Biology",
                                                     "Biodiversity",
-                                                    "Valuing Biodiversity"])
+                                                    "Valuing Biodiversity",
+                                                    "Paper Summary 1"])
 
 # Subpage selection based on the main presentation
 if main_page == "Home":
     st.title("Welcome to the Interactive Site for Conservation Biology")
     st.write("Choose a unit from the sidebar to view its content.")
+    st.write("Author: Matthew J. Lundquist, PhD")
     # HTML and CSS for dynamic resizing and centering
     html_code = """
     <div style="display: flex; justify-content: center; width: 100%; margin-bottom: 20px;">
@@ -113,8 +119,20 @@ elif main_page == "Biodiversity":
         u25()
     
 elif main_page == "Valuing Biodiversity":
-    sub_page = st.sidebar.radio("Choose a page:", ["Ecosystem Services"
+    sub_page = st.sidebar.radio("Choose a page:", ["Ecosystem Services",
+                                                   "Valuation Activity",
+                                                   "Environmental Ethics"
                                                     ])
     
     if sub_page == "Ecosystem Services":
         u30()
+    elif sub_page == "Valuation Activity":
+        u31()
+    elif sub_page == "Environmental Ethics":
+        u32()
+        
+elif main_page == "Paper Summary 1":
+    sub_page = st.sidebar.radio("Choose a page:", ["Discussion"])
+    
+    if sub_page == "Discussion":
+        up0()

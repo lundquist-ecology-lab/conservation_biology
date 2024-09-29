@@ -8,4 +8,5 @@ services:
       - ./unit1:/app/unit1
       - ./unit2:/app/unit2
       - ./unit3:/app/unit3
+      - ./paper_summary:/app/paper_summary
       - ./.streamlit:/app/.streamlit  # Bind mount the Streamlit configuration folder
