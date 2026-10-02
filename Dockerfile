@@ -12,6 +12,13 @@ COPY requirements.txt .
 # Install Python dependencies (Streamlit and any other dependencies)
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Real page title, description, and canonical URL in Streamlit's static index.html
+COPY patch_index_html.py /tmp/patch_index_html.py
+RUN SITE_TITLE="Conservation Biology · Interactive Course" \
+    SITE_DESCRIPTION="Lessons, class activities, data exercises, and simulations for an undergraduate Conservation Biology course, by Matthew J. Lundquist, Ph.D." \
+    SITE_URL="https://lundquistecology.com/conservation/" \
+    python /tmp/patch_index_html.py
+
 # Copy the Streamlit app files into the container
 COPY app.py .
 COPY common/ ./common/
