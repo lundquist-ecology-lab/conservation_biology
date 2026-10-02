@@ -1,6 +1,16 @@
 services:
   streamlit:
     build: .
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - DAC_OVERRIDE
+    environment:
+      # Instructor key for clearing class submissions; set in .env (gitignored). Blank = clear controls off.
+      CONSERVATION_INSTRUCTOR_KEY: ${CONSERVATION_INSTRUCTOR_KEY:-}
     ports:
       - "8501:8501"  # Maps the host port to the container port
     volumes:
@@ -9,4 +19,13 @@ services:
       - ./unit2:/app/unit2
       - ./unit3:/app/unit3
       - ./paper_summary:/app/paper_summary
+      - ./unit4:/app/unit4
+      - ./unit5:/app/unit5
+      - ./unit6:/app/unit6
+      - ./data_analysis_activity:/app/data_analysis_activity
+      - ./unit7:/app/unit7
+      - ./unit8:/app/unit8
+      - ./unit9:/app/unit9
       - ./.streamlit:/app/.streamlit  # Bind mount the Streamlit configuration folder
+      - ./assets:/app/assets
+      - ./common:/app/common

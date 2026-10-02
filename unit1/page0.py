@@ -6,6 +6,8 @@ from datetime import datetime
 import matplotlib.pyplot as plt
 import time
 
+from common.instructor import instructor_clear_button
+
 # Define the file name to store rankings
 rank_file = "environmental_issues_ranks.csv"
 
@@ -38,26 +40,27 @@ def page0_content():
             time.sleep(2)
             st.rerun()  # Rerun to refresh the plot immediately after submission
 
-    # Always display the plot if the file exists
-    if os.path.exists(rank_file):
-        plot_ranks()
-    else:
-        st.info("No rankings have been submitted yet.")
+    # Class results refresh on their own every 10 seconds without reloading the page
+    live_results()
 
-    # Button to clear all rankings
-    if st.button("Clear All Rankings"):
+    # Clearing the shared class data is instructor-only
+    if instructor_clear_button("Clear All Rankings", key="rankings"):
         clear_all_rankings()
         time.sleep(2)
         st.rerun()  # Rerun to refresh the page immediately after clearing
 
-    # Display the current number of submissions
-    submission_count_placeholder = st.empty()  # Placeholder for the count
-    update_submission_count(submission_count_placeholder)
 
-    # Option to view the current rankings
+@st.fragment(run_every=10)
+def live_results():
     if os.path.exists(rank_file):
+        df = pd.read_csv(rank_file)
+        st.write(f"Number of Submissions: {len(df)}")
+        plot_ranks()
         st.write("Current Rankings:")
-        display_current_rankings()
+        st.dataframe(df)
+    else:
+        st.write("Number of Submissions: 0")
+        st.info("No rankings have been submitted yet.")
 
 # Function to save user rankings to CSV file
 def save_ranks(ranks):
@@ -120,17 +123,6 @@ def plot_ranks():
 
     st.pyplot(fig)
 
-# Function to update the count of submissions every 2 seconds
-def update_submission_count(placeholder):
-    while True:
-        if os.path.exists(rank_file):
-            df = pd.read_csv(rank_file)
-            submission_count = len(df)
-            placeholder.write(f"Number of Submissions: {submission_count}")
-        else:
-            placeholder.write("Number of Submissions: 0")
-        time.sleep(2)  # Refresh every 2 seconds
-        st.rerun()  # Ensure the app updates
 
 # Run the app
 if __name__ == "__main__":

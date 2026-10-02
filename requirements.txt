@@ -2,4 +2,14 @@ streamlit==1.38.0
 matplotlib
 numpy
 pandas
+folium
+streamlit-folium
+scipy
+seaborn
+plotly
+pygbif
+altair
+us
+streamlit-ace
+requests
 # Include any other dependencies here

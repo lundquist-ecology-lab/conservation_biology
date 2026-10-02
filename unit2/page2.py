@@ -1,4 +1,6 @@
 import streamlit as st
+
+from common.instructor import instructor_clear_button
 from PIL import Image, UnidentifiedImageError
 import requests
 from io import BytesIO
@@ -126,8 +128,8 @@ def page2_content():
     if st.session_state['reveal_answer']:
         st.write("The correct images of real honey bees are: **C, F, and H**")
 
-    # Button to clear the CSV file
-    if st.button("Clear CSV"):
+    # Clearing the shared class data is instructor-only
+    if instructor_clear_button("Clear class selections", key="bee_images"):
         clear_csv()
         table_update(table_placeholder)  # Update the table after clearing
 

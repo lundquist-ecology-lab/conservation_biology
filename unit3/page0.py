@@ -1,4 +1,6 @@
 import streamlit as st
+
+from common.instructor import instructor_clear_button
 import os
 
 # Function to load existing answers from a file
@@ -59,18 +61,8 @@ def page0_content():
     if st.button("Refresh"):
         st.rerun()
 
-    # Clear button (light red)
-    clear_button_style = """
-    <style>
-    .stButton > button:nth-child(4) {
-        background-color: #ffcccc;
-        color: black;
-    }
-    </style>
-    """
-    st.markdown(clear_button_style, unsafe_allow_html=True)
-    
-    if st.button("Clear All"):
+    # Clearing the shared class data is instructor-only
+    if instructor_clear_button("Clear All", key="ecosystem_services"):
         st.session_state['ecosystem_services'] = []
         save_answers(st.session_state['ecosystem_services'])  # Clear the file
         st.rerun()

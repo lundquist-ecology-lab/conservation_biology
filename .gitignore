@@ -1,0 +1,14 @@
+# secrets
+.env
+# local backups and caches
+backups/
+unit1/backups/
+__pycache__/
+*.bak*
+# manim render artifacts (only unit5/extinction_vortex_animation.mp4 is used)
+unit5/media/
+# class submissions written at runtime
+environmental_issues_ranks.csv
+user_selections.csv
+ecosystem_services.txt
+terms*.json

@@ -1,4 +1,6 @@
 import streamlit as st
+
+from common.instructor import instructor_clear_button
 import os
 import json
 import shutil
@@ -124,8 +126,8 @@ def page7_content():
     if st.button("Refresh Submissions"):
         display_json(file_name_terms_json)
 
-    # Button to clear and backup the JSON file
-    if st.button("Clear Submissions"):
+    # Clearing the shared class data is instructor-only
+    if instructor_clear_button("Clear Submissions", key="terms"):
         clear_json(file_name_terms_json)
         st.rerun()  # Rerun to refresh immediately after clearing
 

@@ -7,7 +7,12 @@ enableCORS = false
 gatherUsageStats = false
 
 [theme]
-base="light"
+base = "dark"
+primaryColor = "#8C977D"  # Using the green from kitty theme instead of yellow
+backgroundColor = "#151515"  # Matching the exact background from kitty
+secondaryBackgroundColor = "#1D1D1D"  # Paradise surface (was #424242)
+textColor = "#E8E3E3"  # Matching the foreground text color from kitty
+font = "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"  # Web-readable font stack
 
 [client]
 displayEnabled = false
